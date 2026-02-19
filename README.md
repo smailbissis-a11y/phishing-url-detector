@@ -309,12 +309,12 @@ This tool is for educational and defensive purposes only. It provides analysis b
 
 ---
 
-## 📞 Contact
+## Contact
 
-**Your Name** - Cybersecurity Engineer
+**SMAIL BISSIS** - Cybersecurity Engineer
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+- GitHub: [@smailbissis-a11y](https://github.com/smailbissis-a11y)
+- LinkedIn: [SMAIL BISSIS](https://linkedin.com/in/smail-bissis)
 
 ---
 
