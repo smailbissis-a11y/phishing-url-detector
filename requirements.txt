@@ -1,0 +1,13 @@
+# Phishing URL Detector - Requirements
+# ======================================
+# Install with: pip install -r requirements.txt
+
+# Web Framework
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# For production deployment (optional)
+gunicorn==21.2.0
+
+# Testing (optional)
+pytest==7.4.3

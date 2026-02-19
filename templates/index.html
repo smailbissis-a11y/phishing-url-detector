@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing URL Detector | Cybersecurity Tool</title>
+    <meta name="description" content="Free tool to detect phishing URLs. Analyze suspicious links and protect yourself from online scams.">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-shield-check"></i> Phishing Detector
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" id="singleTab" onclick="showTab('single')">
+                            <i class="bi bi-link-45deg"></i> Single URL
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="batchTab" onclick="showTab('batch')">
+                            <i class="bi bi-list-ul"></i> Batch Scan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">
+                            <i class="bi bi-info-circle"></i> About
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <!-- Hero Section -->
+        <section class="hero-section text-center mb-5">
+            <h1 class="display-5 fw-bold">
+                <i class="bi bi-shield-fill-check text-success"></i>
+                Phishing URL Detector
+            </h1>
+            <p class="lead text-muted">
+                Protect yourself from phishing attacks by analyzing suspicious URLs
+            </p>
+        </section>
+
+        <!-- Single URL Analysis Section -->
+        <section id="singleSection" class="analysis-section">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-search"></i> Analyze a Single URL
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="singleForm" onsubmit="return analyzeSingle(event)">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">
+                                <i class="bi bi-link-45deg"></i>
+                            </span>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="urlInput" 
+                                   placeholder="Enter URL to analyze (e.g., https://example.com)"
+                                   required>
+                            <button class="btn btn-primary" type="submit" id="analyzeBtn">
+                                <i class="bi bi-shield-check"></i> Analyze
+                            </button>
+                        </div>
+                        <div class="form-text mt-2">
+                            Enter any URL to check for phishing indicators
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Batch Analysis Section -->
+        <section id="batchSection" class="analysis-section d-none">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-list-ul"></i> Batch URL Scanner
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="batchForm" onsubmit="return analyzeBatch(event)">
+                        <div class="mb-3">
+                            <label for="batchInput" class="form-label">
+                                Enter multiple URLs (one per line)
+                            </label>
+                            <textarea class="form-control" 
+                                      id="batchInput" 
+                                      rows="6" 
+                                      placeholder="https://example1.com&#10;https://example2.com&#10;https://example3.com"
+                                      required></textarea>
+                        </div>
+                        <button class="btn btn-info text-white" type="submit" id="batchBtn">
+                            <i class="bi bi-shield-check"></i> Scan All URLs
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="text-center my-4 d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Analyzing...</span>
+            </div>
+            <p class="mt-2 text-muted">Analyzing URL...</p>
+        </div>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="mt-4 d-none">
+            <!-- Single Result -->
+            <div id="singleResult" class="d-none">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            
+            <!-- Batch Results -->
+            <div id="batchResult" class="d-none">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="mt-5">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle"></i> How It Works
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6><i class="bi bi-gear text-primary"></i> Detection Methods</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="bi bi-check-circle text-success"></i> Lexical Analysis</li>
+                                <li><i class="bi bi-check-circle text-success"></i> IP Address Detection</li>
+                                <li><i class="bi bi-check-circle text-success"></i> Suspicious Keywords</li>
+                                <li><i class="bi bi-check-circle text-success"></i> Domain Analysis</li>
+                                <li><i class="bi bi-check-circle text-success"></i> TLD Verification</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6><i class="bi bi-exclamation-triangle text-warning"></i> Common Phishing Signs</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="bi bi-x-circle text-danger"></i> IP address in URL</li>
+                                <li><i class="bi bi-x-circle text-danger"></i> @ symbol in URL</li>
+                                <li><i class="bi bi-x-circle text-danger"></i> Suspicious TLD (.xyz, .tk)</li>
+                                <li><i class="bi bi-x-circle text-danger"></i> Misspelled domain names</li>
+                                <li><i class="bi bi-x-circle text-danger"></i> Urgency keywords</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Note:</strong> This tool provides analysis based on URL characteristics.
+                        Always use multiple verification methods before clicking suspicious links.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-1">
+                <i class="bi bi-shield-check"></i> Phishing URL Detector
+            </p>
+            <p class="text-muted mb-0">
+                Cybersecurity Portfolio Project | 
+                <a href="https://github.com" class="text-light">View on GitHub</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
